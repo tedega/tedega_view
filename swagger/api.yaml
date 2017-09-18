@@ -1,0 +1,102 @@
+swagger: '2.0'
+info:
+  title: Item Example API
+  version: "0.1"
+consumes:
+  - servicelication/json
+produces:
+  - servicelication/json
+security:
+  # enable OAuth protection for all REST endpoints
+  # (only active if the TOKENINFO_URL environment variable is set)
+  - oauth2: [uid]
+paths:
+  /items:
+    get:
+      tags: [Items]
+      operationId: service.get_items
+      summary: Get all items
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          minimum: 0
+          default: 100
+      responses:
+        200:
+          description: Return items
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Item'
+  /items/{item_id}:
+    get:
+      tags: [Items]
+      operationId: service.get_item
+      summary: Get a single item
+      parameters:
+        - $ref: '#/parameters/item_id'
+      responses:
+        200:
+          description: Return item
+          schema:
+            $ref: '#/definitions/Item'
+        404:
+          description: Item does not exist
+    put:
+      tags: [Items]
+      operationId: service.put_item
+      summary: Create or update a item
+      parameters:
+        - $ref: '#/parameters/item_id'
+        - name: item
+          in: body
+          schema:
+            $ref: '#/definitions/Item'
+      responses:
+        200:
+          description: Item updated
+        201:
+          description: New item created
+    delete:
+      tags: [Items]
+      operationId: service.delete_item
+      summary: Remove a item
+      parameters:
+        - $ref: '#/parameters/item_id'
+      responses:
+        204:
+          description: Item was deleted
+        404:
+          description: Item does not exist
+
+
+parameters:
+  item_id:
+    name: item_id
+    description: Item's Unique identifier
+    in: path
+    type: string
+    required: true
+    pattern: "^[a-zA-Z0-9-]+$"
+
+definitions:
+  Item:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: Unique identifier
+        example: "123"
+        readOnly: true
+
+
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: https://example.com/oauth2/dialog
+    scopes:
+      uid: Unique identifier of the user accessing the service.
