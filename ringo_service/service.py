@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-import connexion
+import os
 import logging
-
+import connexion
 from connexion import NoContent
 
-# our memory-only item storage
+# Name of the environment valirable which stores the path to the custom
+# service configuration. See
+# http://flask.pocoo.org/docs/dev/config/#configuring-from-files
+SERVICE_CONFIG = "SERVICE_CONFIG"
+
+# Our memory-only item storage
 ITEMS = {}
+
+# Create a new logger for this service.
+logger = logging.getLogger(__name__)
 
 
 def get_items(limit):
@@ -20,30 +28,38 @@ def get_item(item_id):
 def put_item(item_id, item):
     exists = item_id in ITEMS
     if exists:
-        logging.info('Updating item %s..', item_id)
+        logger.info('Updating item %s..', item_id)
         ITEMS[item_id].update(item)
     else:
-        logging.info('Creating item %s..', item_id)
+        logger.info('Creating item %s..', item_id)
         ITEMS[item_id] = item
     return NoContent, (200 if exists else 201)
 
 
 def delete_item(item_id):
     if item_id in ITEMS:
-        logging.info('Deleting item %s..', item_id)
+        logger.info('Deleting item %s..', item_id)
         del ITEMS[item_id]
         return NoContent, 204
     else:
         return NoContent, 404
 
-
-logging.basicConfig(level=logging.INFO)
-app = connexion.App(__name__)
-app.add_api('../swagger/api.yaml')
-# set the WSGI application callable to allow using uWSGI:
-# uwsgi --http :8080 -w app
-application = app.app
-
 if __name__ == '__main__':
-    # run our standalone gevent server
-    app.run(port=8080, server='gevent')
+    connexion_app = connexion.App(__name__)
+    app = connexion_app.app
+
+    # Load configuration
+    config = app.config
+    config.from_object('ringo_service.config.DevelopmentConfig')
+    if os.environ.get(SERVICE_CONFIG):
+        config.from_envvar(SERVICE_CONFIG)
+
+    # Setup Logging
+    if config.get("DEBUG"):
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+
+    connexion_app.add_api(config.get('API_CONFIG'))
+    connexion_app.run(port=config.get('SERVER_PORT'),
+                      server=config.get('SERVER'))
