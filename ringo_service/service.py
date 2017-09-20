@@ -43,8 +43,8 @@ def get_items(limit):
 
 
 def get_item(item_id):
-    item = ITEMS.get(item_id)
-    return item or ('Not found', 404)
+    item = load_item(db, item_id)
+    return to_json(item.values) or ('Not found', 404)
 
 
 def put_item(item_id, item):
