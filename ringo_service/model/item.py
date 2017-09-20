@@ -1,18 +1,53 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import inspect
+import importlib
 from datetime import datetime
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import inspect
 
 Base = declarative_base()
+Base.metadata.extend_existing = True
+
+DOMAIN = None
+"""Root class of the domain model for this service. The service will
+return items of this class when querying the service."""
 
 
-def create_model(engine):
+def create_model(engine, domain):
     """Will trigger the creation of all needed tables in the database
     for the model."""
+    global DOMAIN
+
+    # Split the configured import path to the domain model to get the
+    # root of the domain model and the complete model.
+    import_path = domain.split(".")
+    modul_path = ".".join(import_path[0:-1])
+    domain_root = import_path[-1]
+
+    # Now import the complete modul and iterate over the classes of the
+    # domain. In case the class is intended to be table in the database
+    # we will dynamically craft the class for this. If the class is the
+    # configured root of the domain. Save it as DOMAIN.
+    MODUL = importlib.import_module(modul_path)
+    for k, v in MODUL.__dict__.items():
+        if inspect.isclass(v) and hasattr(v, "__tablename__"):
+            clazz = craft_class(v, v.__name__)
+            if clazz.__name__ == domain_root:
+                DOMAIN = clazz
+
+    # After we imported all relevant classes we can create the tables in
+    # the database.
     Base.metadata.create_all(engine)
+
+
+def craft_class(Class, name):
+    """Will dynamically craft a new Class based on the given Class with
+    the given name. The resulting class will inherit from multiple base
+    classes which makes the crafted class compatible with the
+    service."""
+    return type(name, (Class, BaseItem, Base, ), dict())
 
 
 ########################################################################
@@ -25,7 +60,7 @@ def load_items(db):
     :db: DB session
     :returns: List of :class:Item
     """
-    return db.query(Item).all()
+    return db.query(DOMAIN).all()
 
 
 def load_item(db, item_id):
@@ -39,7 +74,7 @@ def load_item(db, item_id):
 
     """
     try:
-        return db.query(Item).filter(Item.id == item_id).one()
+        return db.query(DOMAIN).filter(DOMAIN.id == item_id).one()
     except NoResultFound:
         return None
 
@@ -55,7 +90,7 @@ def create_item(values):
     :returns: a Single :class:Item
 
     """
-    return Item(values)
+    return DOMAIN(values)
 
 
 ########################################################################
@@ -66,7 +101,6 @@ class BaseItem(object):
     """Base for all items in the domain of this service. It provides
     simple helper methods to retreive and set values of a single
     item."""
-    __tablename__ = "items"
     id = sa.Column(sa.Integer, primary_key=True)
     created = sa.Column(sa.DateTime)
     updated = sa.Column(sa.DateTime)
@@ -86,7 +120,7 @@ class BaseItem(object):
 
         :returns: List of fieldnames
         """
-        mapper = inspect(self)
+        mapper = sa.inspect(self)
         return [column.key for column in mapper.attrs]
 
     @property
@@ -109,8 +143,3 @@ class BaseItem(object):
             value = values.get(field)
             if value is not None:
                 setattr(self, field, value)
-
-
-class Item(BaseItem, Base):
-    """Dummy implementation of a single item within this service."""
-    pass
