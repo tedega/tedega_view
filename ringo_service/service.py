@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import os
 import logging
 import connexion
@@ -90,13 +91,17 @@ if __name__ == '__main__':
 
     # Load configuration
     engine = get_engine(app.config.get("DATABASE_URI"))
-    create_model(engine)
-
+    domain_model = app.config.get("DOMAIN_MODEL")
     # Setup Logging
     if config.get("DEBUG"):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+
+    if not domain_model:
+        print("Error. No domain model is configured.")
+        sys.exit(1)
+    create_model(engine, app.config.get("DOMAIN_MODEL"))
 
     connexion_app.add_api(config.get('API_CONFIG'))
     connexion_app.run(port=config.get('SERVER_PORT'),
