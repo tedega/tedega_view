@@ -18,8 +18,13 @@ Ringo Service
      :alt: Updates
 
 
-Ringo service
+Ringo service is a framework to build microservices. It can be used to make a
+specic domain model available through a REST API.
 
+Ringo service use `connexion <https://github.com/zalando/connexion>`_ to
+generate the endpoints of the service based on a `swagger
+<https://swagger.io>`_ specification. The specification is partially
+dynamically generated based on the attributes of the domain model.
 
 * Free software: MIT license
 * Documentation: https://ringo-service.readthedocs.io.
@@ -28,7 +33,8 @@ Ringo service
 Features
 --------
 
-* TODO
+* Pluggable domain model.
+* REST API with automatic generated CRUD endpoints.
 
 Credits
 ---------
