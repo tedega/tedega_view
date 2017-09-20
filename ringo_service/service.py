@@ -19,10 +19,17 @@ from model.converters import (
 )
 
 
-# Name of the environment valirable which stores the path to the custom
-# service configuration. See
-# http://flask.pocoo.org/docs/dev/config/#configuring-from-files
 SERVICE_CONFIG = "SERVICE_CONFIG"
+"""Name of the environment valirable which stores the path to the custom
+service configuration. See
+http://flask.pocoo.org/docs/dev/config/#configuring-from-files
+"""
+SERVICE_MODE = "SERVICE_MODE"
+"""Name of the environment valirable which stores mode of the
+application. The following modes are available:
+1. Development
+2. Production
+"""
 
 # Create a new logger for this service.
 logger = logging.getLogger(__name__)
@@ -31,7 +38,7 @@ logger = logging.getLogger(__name__)
 connexion_app = connexion.App(__name__)
 app = connexion_app.app
 config = app.config
-config.from_object('ringo_service.config.DevelopmentConfig')
+config.from_object('ringo_service.config.{}Config'.format(os.environ.get(SERVICE_MODE, "Development")))
 if os.environ.get(SERVICE_CONFIG):
     config.from_envvar(SERVICE_CONFIG)
 
@@ -88,7 +95,6 @@ def delete_item(item_id):
         return NoContent, 404
 
 if __name__ == '__main__':
-
     # Load configuration
     engine = get_engine(app.config.get("DATABASE_URI"))
     domain_model = app.config.get("DOMAIN_MODEL")
