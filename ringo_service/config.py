@@ -22,6 +22,7 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
+    DATABASE_URI = 'sqlite:///db.sqlite'
     DEBUG = True
     SERVER = None
 
