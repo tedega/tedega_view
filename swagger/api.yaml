@@ -76,9 +76,8 @@ parameters:
     name: item_id
     description: Item's Unique identifier
     in: path
-    type: string
+    type: integer
     required: true
-    pattern: "^[a-zA-Z0-9-]+$"
 
 definitions:
   Item:
@@ -87,7 +86,7 @@ definitions:
       - id
     properties:
       id:
-        type: string
+        type: integer
         description: Unique identifier
         example: "123"
         readOnly: true
