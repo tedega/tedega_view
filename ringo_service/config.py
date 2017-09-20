@@ -28,5 +28,6 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DATABASE_URI = 'sqlite:///db.sqlite'
+    DOMAIN_MODEL = 'ringo_service.model.example.Foo'
     DEBUG = True
     SERVER = None
