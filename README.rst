@@ -35,6 +35,8 @@ Features
 
 * Pluggable domain model.
 * REST API with automatic generated CRUD endpoints.
+* RDBMS agnostic
+* Runs with Python version 2.7.x and >= 3.5
 
 Credits
 ---------
