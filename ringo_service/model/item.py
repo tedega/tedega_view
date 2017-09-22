@@ -101,9 +101,9 @@ class BaseItem(object):
     """Base for all items in the domain of this service. It provides
     simple helper methods to retreive and set values of a single
     item."""
-    id = sa.Column(sa.Integer, primary_key=True)
-    created = sa.Column(sa.DateTime)
-    updated = sa.Column(sa.DateTime)
+    id = sa.Column(sa.Integer, primary_key=True, info={"description": "Primary key of the item."})
+    created = sa.Column(sa.DateTime, info={"description": "Date and Time the item was created.", "readonly": True})
+    updated = sa.Column(sa.DateTime, info={"description": "Date and Time the item was last modified."})
 
     def __init__(self, values):
         if "id" in values and values["id"]:
