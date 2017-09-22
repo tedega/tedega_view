@@ -40,6 +40,7 @@ def create_model(engine, domain):
     # After we imported all relevant classes we can create the tables in
     # the database.
     Base.metadata.create_all(engine)
+    return DOMAIN
 
 
 def craft_class(Class, name):

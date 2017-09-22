@@ -18,6 +18,11 @@ from model.converters import (
     to_json
 )
 
+from lib.swagger import (
+    generate_config,
+    write_config
+)
+
 
 SERVICE_CONFIG = "SERVICE_CONFIG"
 """Name of the environment valirable which stores the path to the custom
@@ -109,8 +114,12 @@ if __name__ == '__main__':
     if not domain_model:
         print("Error. No domain model is configured.")
         sys.exit(1)
-    create_model(engine, app.config.get("DOMAIN_MODEL"))
+    model = create_model(engine, domain_model)
 
-    connexion_app.add_api(config.get('API_CONFIG'))
+    # Generate the config file
+    swagger_config = generate_config(config.get('API_CONFIG'), model)
+    with write_config(swagger_config) as swagger_config_file:
+        connexion_app.add_api(swagger_config_file)
+
     connexion_app.run(port=config.get('SERVER_PORT'),
                       server=config.get('SERVER'))

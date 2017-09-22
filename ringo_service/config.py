@@ -11,7 +11,7 @@ class Config(object):
     """Set to true to enable debug logging"""
     DATABASE_URI = 'sqlite://:memory:'
     """Configure the database connection."""
-    API_CONFIG = '../swagger/api.yaml'
+    API_CONFIG = 'swagger/api.yaml'
     """Path to the API configuration used by connexion."""
     DOMAIN_MODEL = ''
     """Path to the root class of your domain mode. E.g.

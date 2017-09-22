@@ -79,28 +79,7 @@ parameters:
     type: integer
     required: true
 
-definitions:
-  Item:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: integer
-        description: Unique identifier
-        example: "123"
-        readOnly: true
-      created:
-        type: string
-        description: Time of creation
-        example: "2017-09-19T16:15:30.862344"
-        readOnly: true
-      updated:
-        type: string
-        description: Time of last update
-        example: "2017-09-19T16:15:30.862344"
-        readOnly: false
-
+${definitions}
 
 securityDefinitions:
   oauth2:
