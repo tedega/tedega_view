@@ -28,7 +28,7 @@ def _json_deserial_hook(json_data):
     for k, v in json_data.items():
         if isinstance(v, basestring):
             if regex_datetime.match(v):
-                json_data[k] = datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+                json_data[k] = datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%fZ")
             elif regex_date.match(v):
                 json_data[k] = datetime.strptime(v, "%Y-%m-%d")
     return json_data
