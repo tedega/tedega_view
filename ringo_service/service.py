@@ -51,7 +51,9 @@ def get_items(limit):
 
 def get_item(item_id):
     item = load_item(db, item_id)
-    return to_json(item.values) or ('Not found', 404)
+    if item:
+        return to_json(item.values) 
+    return NoContent, 404
 
 
 def put_item(item_id, item):
@@ -92,7 +94,7 @@ def delete_item(item_id):
             logger.error('Failed deleting item %s..', item_id)
             raise
     else:
-        return NoContent, 404
+        return None
 
 if __name__ == '__main__':
     # Load configuration
