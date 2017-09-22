@@ -6,7 +6,8 @@ import sqlalchemy as sa
 
 class Foo(object):
     __tablename__ = "foo"
-    name = sa.Column("name", sa.String)
+    name = sa.Column("name", sa.String, info={"description": "Name of the Item."})
+    date = sa.Column("date", sa.Date, info={"description": "A simple datefield."})
 
 
 class Bar(object):
