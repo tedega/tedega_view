@@ -2,12 +2,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import venusian
+import voorhees
 from connexion import NoContent
-
-from model.converters import (
-    from_json,
-    to_json
-)
 
 logger = logging.getLogger(__name__)
 
@@ -46,20 +42,17 @@ def service_config(wrapped):
 #                            CRUD Endpoints                            #
 ########################################################################
 
-# def get_items(limit):
-#     return [to_json(item.values) for item in load_items(db)][:limit]
-
 
 def search(limit):
     service = registry.get("search")
     items = service()
-    return [to_json(item.get_values()) for item in items][:limit]
+    return [voorhees.to_json(item.get_values()) for item in items][:limit]
 
 
 def create(item):
     service = registry.get("create")
     try:
-        values = from_json(item)
+        values = voorhees.from_json(item)
         new_item = service(values["name"], values["password"])
         logger.info('Creating item %s..', new_item.id)
         return NoContent, 201
@@ -80,7 +73,7 @@ def read(item_id):
 def update(item_id, item):
     service = registry.get("update")
     try:
-        service(item_id, from_json(item))
+        service(item_id, voorhees.from_json(item))
         logger.info('Updating item %s..', item_id)
         return NoContent, 200
     except Exception:
