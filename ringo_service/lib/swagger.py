@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 definitions_template_src = """
 definitions:
-  % for item in data["items"]:
+  % for item in data["models"]:
   ${item["name"]}:
     type: ${item["type"]}
     %if len(item["required"]) > 0:
@@ -90,8 +90,8 @@ def _get_property_requied(prop):
     return not prop.nullable
 
 
-def generate_part_definitions(model):
-    """Will generate the definitions part of the swagger config based on
+def generate_part_definition(model):
+    """Will generate the definition part of the swagger config based on
     the given model.
 
     :model: Class of the root of the domain model.
@@ -118,10 +118,7 @@ def generate_part_definitions(model):
         item['properties'] = get_properties(model)
         item['required'] = [p["name"] for p in item["properties"] if p["required"]]
         return item
-
-    definition = {}
-    definition['items'] = [get_item(model)]
-    return definition
+    return get_item(model)
 
 
 @contextmanager
@@ -139,7 +136,7 @@ def write_config(config):
     tmpfile.close()
 
 
-def generate_config(template, model):
+def generate_config(template, registry):
     """Will generate a swagger API configuration. The configuration file
     is build on the base of the given template configuration and is
     extended by dynamically generated parts based on the given model.
@@ -148,7 +145,10 @@ def generate_config(template, model):
     :model: Class of the root of the domain model.
     :returns: Dynamically generated config as string.
     """
-    definitions = definitions_template.render(data=generate_part_definitions(model))
+    data = dict(models=[])
+    for name, model in registry.models:
+        data["models"].append(generate_part_definition(model))
+    definitions = definitions_template.render(data=data)
     with open(template) as t:
         content = StringTemplate(t.read())
         content = content.safe_substitute(definitions=definitions)

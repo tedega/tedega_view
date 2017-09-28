@@ -4,7 +4,8 @@ import venusian
 import connexion
 
 from lib.swagger import (
-    write_config
+    write_config,
+    generate_config
 )
 from api import (
     registry
@@ -27,13 +28,21 @@ application. The following modes are available:
 logger = logging.getLogger(__name__)
 
 
-def start_service(swagger_config, modul):
+def start_service(swagger_config, modul, port=None, server=None):
     scanner = venusian.Scanner(registry=registry)
     scanner.scan(modul)
 
     # Generate the config file
+    swagger_config = generate_config(swagger_config, registry)
+
+
     connexion_app = connexion.App(__name__)
     config = connexion_app.app.config
+
+    if port is None:
+        port = config.get('SERVER_PORT')
+    if server is None:
+        server = config.get('SERVER')
 
     # Setup Logging
     if config.get("DEBUG"):
@@ -43,5 +52,4 @@ def start_service(swagger_config, modul):
 
     with write_config(swagger_config) as swagger_config_file:
         connexion_app.add_api(swagger_config_file)
-    connexion_app.run(port=config.get('SERVER_PORT'),
-                      server=config.get('SERVER'))
+    connexion_app.run(port=port, server=server)
