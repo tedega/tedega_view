@@ -15,8 +15,7 @@ logger = logging.getLogger(__name__)
 definitions_template_src = """
 definitions:
   % for item in data["items"]:
-  Item:
-  ##${item["name"]}:
+  ${item["name"]}:
     type: ${item["type"]}
     %if len(item["required"]) > 0:
     required:
