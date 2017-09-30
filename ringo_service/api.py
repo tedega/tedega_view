@@ -80,7 +80,7 @@ def read(item_id):
     service = registry.get_api("read")
     try:
         item = service(item_id)
-        return to_json(item.get_values())
+        return voorhees.to_json(item.get_values())
     except:
         return NoContent, 404
 
