@@ -36,7 +36,7 @@ registry = Registry()
 ########################################################################
 
 
-def register_api(path=None, method="GET", endpoint=None):
+def config_service_endpoint(path=None, method="GET", endpoint=None):
     def real_decorator(function):
         def callback(scanner, name, ob):
             scanner.registry.add_endpoint(name, function)
@@ -45,7 +45,7 @@ def register_api(path=None, method="GET", endpoint=None):
     return real_decorator
 
 
-def register_model():
+def config_service_model():
     def real_decorator(clazz):
         def callback(scanner, name, ob):
             scanner.registry.add_model(name, clazz)
