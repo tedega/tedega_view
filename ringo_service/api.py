@@ -58,16 +58,20 @@ def config_service_model():
 ########################################################################
 
 
+class NotFound(Exception):
+    pass
+
+
 def search(limit):
     service = registry.get_endpoint("search")
     items = service()
     return [voorhees.to_json(item.get_values()) for item in items][:limit]
 
 
-def create(item):
+def create(values):
     service = registry.get_endpoint("create")
     try:
-        values = voorhees.from_json(item)
+        values = voorhees.from_json(values)
         new_item = service(values["name"], values["password"])
         logger.info('Creating item %s..', new_item.id)
         return NoContent, 201
@@ -81,16 +85,21 @@ def read(item_id):
     try:
         item = service(item_id)
         return voorhees.to_json(item.get_values())
-    except:
+    except NotFound:
         return NoContent, 404
+    except Exception:
+        logger.error('Failed reading item %s..', item_id)
+        raise
 
 
-def update(item_id, item):
+def update(item_id, values):
     service = registry.get_endpoint("update")
     try:
-        service(item_id, voorhees.from_json(item))
+        service(item_id, voorhees.from_json(values))
         logger.info('Updating item %s..', item_id)
         return NoContent, 200
+    except NotFound:
+        return NoContent, 404
     except Exception:
         logger.error('Failed updating item %s..', item_id)
         raise
@@ -102,6 +111,8 @@ def delete(item_id):
         service(item_id)
         logger.info('Deleting item %s..', item_id)
         return NoContent, 204
+    except NotFound:
+        return NoContent, 404
     except Exception:
         logger.error('Failed deleting item %s..', item_id)
         raise
