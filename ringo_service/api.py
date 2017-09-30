@@ -24,7 +24,7 @@ class Registry(object):
         self.models.append((name, clazz))
 
     def get_endpoint(self, name):
-        for key, func in self.registered:
+        for key, func in self.apis:
             if name == key:
                 return func
         return None
