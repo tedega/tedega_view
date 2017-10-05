@@ -65,7 +65,10 @@ class NotFound(Exception):
 def search(limit):
     service = registry.get_endpoint("search")
     items = service()
-    return [voorhees.to_json(item.get_values()) for item in items][:limit]
+    result = []
+    for item in items[:limit]:
+        result.append(item.get_values())
+    return voorhees.to_json(result)
 
 
 def create(values):
