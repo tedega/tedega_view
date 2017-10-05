@@ -68,7 +68,7 @@ def search(limit):
     result = []
     for item in items[:limit]:
         result.append(item.get_values())
-    return voorhees.to_json(result)
+    return voorhees.to_json(result), 200
 
 
 def create(values):
@@ -98,9 +98,9 @@ def read(item_id):
 def update(item_id, values):
     service = registry.get_endpoint("update")
     try:
-        service(item_id, voorhees.from_json(values))
+        item = service(item_id, voorhees.from_json(values))
         logger.info('Updating item %s..', item_id)
-        return NoContent, 200
+        return voorhees.to_json(item.get_values()), 200
     except NotFound:
         return NoContent, 404
     except Exception:
