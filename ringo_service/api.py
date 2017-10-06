@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
 import logging
 import venusian
 import voorhees
+import connexion
 from connexion import NoContent
 
 logger = logging.getLogger(__name__)
@@ -10,6 +12,31 @@ logger = logging.getLogger(__name__)
 ########################################################################
 #                           Service registry                           #
 ########################################################################
+
+
+def _get_request_path():
+    request = connexion.request
+    url_rule = request.url_rule
+    # `url_rule` comes from request.url_rule and has a different
+    # notation than the path definitions in the swagger config. To be
+    # able to find the appropriate function to call in a request we need
+    # to transform the url_rule into the form swagger uses.
+
+    # Remove type information e.g. <int:foo> -> <foo>
+    url_rule = re.sub("<.+:", "<", str(url_rule))
+    return url_rule.replace("<", "{").replace(">", "}")
+
+
+def _get_request_method():
+    request = connexion.request
+    return request.method
+
+
+def _get_service_parameters(json_data):
+    request = connexion.request
+    _args = request.view_args
+    _args.update(voorhees.from_json(json_data))
+    return _args
 
 
 class Registry(object):
