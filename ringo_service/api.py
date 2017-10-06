@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import inspect
 import re
 import logging
 import venusian
@@ -32,11 +33,27 @@ def _get_request_method():
     return request.method
 
 
-def _get_service_parameters(json_data):
-    request = connexion.request
-    _args = request.view_args
-    _args.update(voorhees.from_json(json_data))
-    return _args
+def _get_service_parameters(service, parameters):
+    service_wants = inspect.getargspec(service)[0]
+    service_send = {}
+    for param in parameters:
+        if param in service_wants:
+            value = parameters[param]
+            if not isinstance(value, int):
+                service_send[param] = voorhees.from_json(value)
+            else:
+                service_send[param] = value
+        else:
+            try:
+                subparameters = voorhees.from_json(parameters[param])
+            except:
+                print("ERROR:", parameters[param], type(parameters[param]))
+                continue
+            for subparam in subparameters:
+                if subparam in inspect.getargspec(service)[0]:
+                    value = subparameters[subparam]
+                    service_send[subparam] = value
+    return service_send
 
 
 class Registry(object):
@@ -103,7 +120,7 @@ class NotFound(Exception):
 def generic(*args, **kwargs):
     service = registry.get_endpoint(_get_request_path(), _get_request_method())
     try:
-        result = service(**_get_service_parameters(kwargs["values"]))
+        result = service(**_get_service_parameters(service, kwargs))
         if result:
             return voorhees.to_json(result), 200
         else:
