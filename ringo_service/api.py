@@ -100,6 +100,20 @@ class NotFound(Exception):
     pass
 
 
+def generic(*args, **kwargs):
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
+    try:
+        result = service(**_get_service_parameters(kwargs["values"]))
+        if result:
+            return voorhees.to_json(result), 200
+        else:
+            return NoContent, 204
+    except NotFound:
+        return NoContent, 404
+    except Exception:
+        raise
+
+
 def search(limit):
     service = registry.get_endpoint(_get_request_path(), _get_request_method())
     items = service()
