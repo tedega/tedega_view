@@ -43,18 +43,29 @@ class Registry(object):
     def __init__(self):
         self.apis = []
         self.models = []
+        self.endpoints = {}
 
-    def add_endpoint(self, name, function):
-        self.apis.append((name, function))
+    def add_endpoint(self, path, method, function):
+        if path not in self.endpoints:
+            self.endpoints[path] = {}
+        if method not in self.endpoints[path]:
+            self.endpoints[path][method] = {}
+            self.endpoints[path][method]["function"] = function
+
+    def get_endpoint(self, path, method):
+        service = None
+        for _path in self.endpoints:
+            if path == _path:
+                endpoint = self.endpoints[path]
+                for _method in endpoint:
+                    if _method == method:
+                        service = endpoint[method]["function"]
+                        break
+        return service
 
     def add_model(self, name, clazz):
         self.models.append((name, clazz))
 
-    def get_endpoint(self, name):
-        for key, func in self.apis:
-            if name == key:
-                return func
-        return None
 
 registry = Registry()
 
@@ -63,10 +74,10 @@ registry = Registry()
 ########################################################################
 
 
-def config_service_endpoint(path=None, method="GET", endpoint=None):
+def config_service_endpoint(path, method="GET", endpoint=None):
     def real_decorator(function):
         def callback(scanner, name, ob):
-            scanner.registry.add_endpoint(name, function)
+            scanner.registry.add_endpoint(path, method, function)
         venusian.attach(function, callback)
         return function
     return real_decorator
@@ -90,7 +101,7 @@ class NotFound(Exception):
 
 
 def search(limit):
-    service = registry.get_endpoint("search")
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
     items = service()
     result = []
     for item in items[:limit]:
@@ -99,7 +110,7 @@ def search(limit):
 
 
 def create(values):
-    service = registry.get_endpoint("create")
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
     try:
         values = voorhees.from_json(values)
         new_item = service(values["name"], values["password"])
@@ -111,7 +122,7 @@ def create(values):
 
 
 def read(item_id):
-    service = registry.get_endpoint("read")
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
     try:
         item = service(item_id)
         return voorhees.to_json(item.get_values())
@@ -123,7 +134,7 @@ def read(item_id):
 
 
 def update(item_id, values):
-    service = registry.get_endpoint("update")
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
     try:
         item = service(item_id, voorhees.from_json(values))
         logger.info('Updating item %s..', item_id)
@@ -136,7 +147,7 @@ def update(item_id, values):
 
 
 def delete(item_id):
-    service = registry.get_endpoint("delete")
+    service = registry.get_endpoint(_get_request_path(), _get_request_method())
     try:
         service(item_id)
         logger.info('Deleting item %s..', item_id)
