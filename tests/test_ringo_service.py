@@ -11,7 +11,7 @@ Tests for `ringo_service` module.
 import pytest
 
 
-from ringo_service import ringo_service
+from ringo_service import service
 
 
 @pytest.fixture
