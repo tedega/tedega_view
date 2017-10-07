@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from past.builtins import basestring
 import inspect
 import re
 import logging
@@ -15,50 +16,8 @@ logger = logging.getLogger(__name__)
 ########################################################################
 
 
-def _get_request_path():
-    request = connexion.request
-    url_rule = request.url_rule
-    # `url_rule` comes from request.url_rule and has a different
-    # notation than the path definitions in the swagger config. To be
-    # able to find the appropriate function to call in a request we need
-    # to transform the url_rule into the form swagger uses.
-
-    # Remove type information e.g. <int:foo> -> <foo>
-    url_rule = re.sub("<.+:", "<", str(url_rule))
-    return url_rule.replace("<", "{").replace(">", "}")
-
-
-def _get_request_method():
-    request = connexion.request
-    return request.method
-
-
-def _get_service_parameters(service, parameters):
-    service_wants = inspect.getargspec(service)[0]
-    service_send = {}
-    for param in parameters:
-        if param in service_wants:
-            value = parameters[param]
-            if not isinstance(value, int):
-                service_send[param] = voorhees.from_json(value)
-            else:
-                service_send[param] = value
-        else:
-            try:
-                subparameters = voorhees.from_json(parameters[param])
-            except:
-                print("ERROR:", parameters[param], type(parameters[param]))
-                continue
-            for subparam in subparameters:
-                if subparam in inspect.getargspec(service)[0]:
-                    value = subparameters[subparam]
-                    service_send[subparam] = value
-    return service_send
-
-
 class Registry(object):
     def __init__(self):
-        self.apis = []
         self.models = []
         self.endpoints = {}
 
@@ -91,7 +50,7 @@ registry = Registry()
 ########################################################################
 
 
-def config_service_endpoint(path, method="GET", endpoint=None):
+def config_service_endpoint(path, method="GET"):
     def real_decorator(function):
         def callback(scanner, name, ob):
             scanner.registry.add_endpoint(path, method, function)
@@ -109,7 +68,7 @@ def config_service_model():
     return real_decorator
 
 ########################################################################
-#                            CRUD Endpoints                            #
+#                               Endpoint                               #
 ########################################################################
 
 
@@ -117,15 +76,96 @@ class NotFound(Exception):
     pass
 
 
-def generic(*args, **kwargs):
-    service = registry.get_endpoint(_get_request_path(), _get_request_method())
+def endpoint_proxy(*args, **kwargs):
+    """Proxy for all configured service endpoints.
+
+    The method will forward the request to the configured service in the
+    registry.
+
+    :args: Currently ignored
+    :kwargs: Dictionary with function arguments preparsed as defined by the swagger config.
+    :returns: Response sent to the client.
+    """
+    # Get the configured service from the registry.
+    path = _get_request_path()
+    method = _get_request_method()
+    service = registry.get_endpoint(path, method)
+
+    # Build params for the service
+    params = _get_service_parameters(service, kwargs)
+
     try:
-        result = service(**_get_service_parameters(service, kwargs))
+        # Call the service TODO: Do we need to handle more return codes
+        # like 201? What is a good way to distiguish between 200 and 201
+        # based on the return value? (ti) <2017-10-07 09:55>
+        result = service(**params)
+
+        # Result. Return it with status code 200
         if result:
             return voorhees.to_json(result), 200
+        # No Result. Return it with status code 204
         else:
             return NoContent, 204
     except NotFound:
+        # Item could not befound. Return 404
         return NoContent, 404
     except Exception:
+        # General Error. Will result in a 500
         raise
+
+
+def _get_request_path():
+    """Will return the path of the current request."""
+    request = connexion.request
+    url_rule = request.url_rule
+    # `url_rule` comes from request.url_rule and has a different
+    # notation than the path definitions in the swagger config. To be
+    # able to find the appropriate function to call in a request we need
+    # to transform the url_rule into the form swagger uses.
+
+    # Remove type information e.g. <int:foo> -> <foo>
+    url_rule = re.sub("<.+:", "<", str(url_rule))
+    return url_rule.replace("<", "{").replace(">", "}")
+
+
+def _get_request_method():
+    """Will return the method (GET, POST...) of the current request."""
+    request = connexion.request
+    return request.method
+
+
+def _get_service_parameters(service, parameters):
+    """Will return parameters suitable to call the given service.
+
+    Example::
+
+        {'values': '{"password": "Password", "id": 1, "name": "User1"}'}
+
+    :service: Service callable.
+    :parameters: Dictionary with function arguments preparsed as defined
+                 by the swagger config.
+    :returns: Dictionary of service parameters.
+    """
+
+    def looks_like_json(value):
+        if isinstance(value, basestring) and (value.startswith("{") or value.startswith("[")):
+            return True
+        return False
+
+    # First check which parameters are wanted by the given service.
+    service_wants = inspect.getargspec(service)[0]
+    service_send = {}
+
+    # Iterate over all function arguments and check if any of those
+    # arguments matches on of the argumentsthe service wants.
+    for param in parameters:
+        value = parameters[param]
+        if looks_like_json(value):
+            value = voorhees.from_json(value)
+        if param in service_wants:
+            service_send[param] = value
+        elif isinstance(value, dict):
+            for subparam in value:
+                if subparam in service_wants:
+                    service_send[subparam] = value[subparam]
+    return service_send
