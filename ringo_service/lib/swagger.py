@@ -13,7 +13,6 @@ from mako.template import Template
 logger = logging.getLogger(__name__)
 
 definitions_template_src = """
-definitions:
   % for item in data["models"]:
   ${item["name"]}:
     type: ${item["type"]}
