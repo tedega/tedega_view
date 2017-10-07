@@ -10,6 +10,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
+    'future',
     'voorhees',
     'connexion',
     'sqlalchemy'
