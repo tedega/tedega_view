@@ -28,3 +28,12 @@ def test_content(response):
     """
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
+
+
+def test_get_params_from_path():
+    from ringo_service.api import get_params_from_path
+    path = "/foo/{item_id}/bar/{baz}"
+    params = get_params_from_path(path)
+    assert len(params) == 2
+    assert params[0] == "item_id"
+    assert params[1] == "baz"

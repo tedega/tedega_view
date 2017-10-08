@@ -16,6 +16,11 @@ logger = logging.getLogger(__name__)
 ########################################################################
 
 
+def get_params_from_path(path):
+    """Returns names of parameter in the path"""
+    return re.findall("{(\w+)}", path)
+
+
 class Registry(object):
     def __init__(self):
         self.models = []
