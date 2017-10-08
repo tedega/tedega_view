@@ -26,11 +26,24 @@ class Registry(object):
         self.models = []
         self.endpoints = {}
 
-    def add_endpoint(self, path, method, function):
+    def add_endpoint(self, path, method, description, params, response, function):
+
         if path not in self.endpoints:
             self.endpoints[path] = {}
         if method not in self.endpoints[path]:
             self.endpoints[path][method] = {}
+            self.endpoints[path][method]["description"] = description
+
+            # Make sure settings for params in path are set and correct.
+            # Therefor enforce the correct "in".
+            for p in get_params_from_path(path):
+                if p not in params:
+                    params[p] = {}
+                    params[p]["type"] = "integer"
+                params[p]["in"] = "path"
+
+            self.endpoints[path][method]["params"] = params
+            self.endpoints[path][method]["response"] = response
             self.endpoints[path][method]["function"] = function
 
     def get_endpoint(self, path, method):
@@ -55,10 +68,11 @@ registry = Registry()
 ########################################################################
 
 
-def config_service_endpoint(path, method="GET"):
+def config_service_endpoint(path, method, description, params, response):
     def real_decorator(function):
         def callback(scanner, name, ob):
-            scanner.registry.add_endpoint(path, method, function)
+            scanner.registry.add_endpoint(path, method, description,
+                                          params, response, function)
         venusian.attach(function, callback)
         return function
     return real_decorator
@@ -94,7 +108,8 @@ def endpoint_proxy(*args, **kwargs):
     # Get the configured service from the registry.
     path = _get_request_path()
     method = _get_request_method()
-    service = registry.get_endpoint(path, method)
+    endpoint = registry.get_endpoint(path, method)
+    service = endpoint["service"]
 
     # Build params for the service
     params = _get_service_parameters(service, kwargs)
