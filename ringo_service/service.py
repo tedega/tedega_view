@@ -6,10 +6,6 @@ import connexion
 from connexion.resolver import Resolver
 from connexion.exceptions import ResolverError
 
-from lib.swagger import (
-    write_config,
-    generate_config
-)
 from api import (
     registry, endpoint_proxy
 )
@@ -50,6 +46,7 @@ def start_service(swagger_config, modul, port=None, server=None):
     scanner.scan(modul)
 
     connexion_app = connexion.App(__name__)
+    connexion_app.add_api(swagger_config, resolver=ServiceResolver())
     config = connexion_app.app.config
 
     # Setup Logging
@@ -57,11 +54,6 @@ def start_service(swagger_config, modul, port=None, server=None):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-
-    # Generate the config file and it to the app.
-    swagger_config = generate_config(swagger_config, registry)
-    with write_config(swagger_config) as swagger_config_file:
-        connexion_app.add_api(swagger_config_file, resolver=ServiceResolver())
 
     # Start the service
     if port is None:
