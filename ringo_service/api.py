@@ -72,6 +72,10 @@ class NotFound(Exception):
     pass
 
 
+class ClientError(Exception):
+    pass
+
+
 def endpoint_proxy(*args, **kwargs):
     """Proxy for all configured service endpoints.
 
@@ -103,6 +107,9 @@ def endpoint_proxy(*args, **kwargs):
         # No Result. Return it with status code 204
         else:
             return NoContent, 204
+    except ClientError as e:
+        # Client request was wrong.
+        return e.message, 400
     except NotFound:
         # Item could not befound. Return 404
         return NoContent, 404
