@@ -2,6 +2,7 @@
 import sys
 import logging
 import venusian
+from flask_cors import CORS
 import connexion
 from connexion.resolver import Resolver
 from connexion.exceptions import ResolverError
@@ -47,6 +48,7 @@ def start_service(swagger_config, modul, port=None, server=None):
 
     connexion_app = connexion.App(__name__)
     connexion_app.add_api(swagger_config, resolver=ServiceResolver())
+    CORS(connexion_app.app)
     config = connexion_app.app.config
 
     # Setup Logging

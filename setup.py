@@ -14,7 +14,8 @@ requirements = [
     'voorhees',
     'swaggenerator',
     'connexion',
-    'sqlalchemy'
+    'sqlalchemy',
+    'flask_cors'
 ]
 
 test_requirements = [
