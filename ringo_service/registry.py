@@ -1,7 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import venusian
-from swaggenerator import EndpointConfig
+
+
+class ServiceConfig(object):
+
+    """Class to store the configuration of a Endpoint."""
+
+    def __init__(self, path, method, function):
+        """TODO: to be defined1."""
+        self.path = path
+        self.method = method
+        self.function = function
+
+    def __str__(self):
+        return "{}:{}".format(self.path, self.method)
 
 
 def config_service_endpoint(path, method):
@@ -29,7 +42,7 @@ class Registry(object):
 
     def add_endpoint(self, path, method, function):
         if "{}:{}".format(path, method) not in self.endpoints:
-            config = EndpointConfig(path, method, function)
+            config = ServiceConfig(path, method, function)
             self.endpoints[str(config)] = config
 
     def get_endpoint(self, path, method):

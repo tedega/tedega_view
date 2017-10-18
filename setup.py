@@ -11,10 +11,9 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'future',
-    'voorhees',
-    'swaggenerator',
     'connexion',
-    'flask_cors'
+    'flask_cors',
+    'voorhees',
 ]
 
 test_requirements = [
