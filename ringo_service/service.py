@@ -32,7 +32,8 @@ class ServiceResolver(Resolver):
         try:
             return self.function_resolver(operation_id)
         except ImportError as e:
-            msg = 'Cannot resolve operationId "{}"! Import error was "{}"'.format(operation_id, str(e))
+            msg = ('Cannot resolve operationId "{}"! '
+                   'Import error was "{}"').format(operation_id, str(e))
             raise ResolverError(msg, sys.exc_info())
         except (AttributeError, ValueError) as e:
             raise ResolverError(str(e), sys.exc_info())

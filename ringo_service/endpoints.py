@@ -17,7 +17,8 @@ def endpoint_proxy(*args, **kwargs):
     registry.
 
     :args: Currently ignored
-    :kwargs: Dictionary with function arguments preparsed as defined by the swagger config.
+    :kwargs: Dictionary with function arguments preparsed as defined by
+    the swagger config.
     :returns: Response sent to the client.
     """
     # Get the configured service from the registry.
@@ -86,7 +87,9 @@ def _get_service_parameters(service, parameters):
     """
 
     def looks_like_json(value):
-        if isinstance(value, basestring) and (value.startswith("{") or value.startswith("[")):
+        if (isinstance(value, basestring) and
+           (value.startswith("{") or
+           value.startswith("["))):
             return True
         return False
 
