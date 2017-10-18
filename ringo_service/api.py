@@ -4,68 +4,12 @@ from past.builtins import basestring
 import inspect
 import re
 import logging
-import venusian
 import voorhees
 import connexion
 from connexion import NoContent
-from swaggenerator import EndpointConfig
+from .registry import registry
 
 logger = logging.getLogger(__name__)
-
-########################################################################
-#                           Service registry                           #
-########################################################################
-
-
-def get_params_from_path(path):
-    """Returns names of parameter in the path"""
-    return re.findall("{(\w+)}", path)
-
-
-class Registry(object):
-    def __init__(self):
-        self.models = []
-        self.endpoints = {}
-
-    def add_endpoint(self, path, method, function):
-        if "{}:{}".format(path, method) not in self.endpoints:
-            config = EndpointConfig(path, method, function)
-            self.endpoints[str(config)] = config
-
-    def get_endpoint(self, path, method):
-        return self.endpoints.get("{}:{}".format(path, method))
-
-    def add_model(self, name, clazz):
-        self.models.append((name, clazz))
-
-
-registry = Registry()
-
-########################################################################
-#        Decorators to configure a service in the domain model         #
-########################################################################
-
-
-def config_service_endpoint(path, method):
-    def real_decorator(function):
-        def callback(scanner, name, ob):
-            scanner.registry.add_endpoint(path, method, function)
-        venusian.attach(function, callback)
-        return function
-    return real_decorator
-
-
-def config_service_model():
-    def real_decorator(clazz):
-        def callback(scanner, name, ob):
-            scanner.registry.add_model(name, clazz)
-        venusian.attach(clazz, callback)
-        return clazz
-    return real_decorator
-
-########################################################################
-#                               Endpoint                               #
-########################################################################
 
 
 class NotFound(Exception):
