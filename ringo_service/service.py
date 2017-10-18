@@ -8,7 +8,7 @@ from connexion.resolver import Resolver
 from connexion.exceptions import ResolverError
 
 from registry import registry
-from api import endpoint_proxy
+from endpoints import endpoint_proxy
 
 # Create a new logger for this service.
 logger = logging.getLogger(__name__)
