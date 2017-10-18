@@ -3,21 +3,11 @@
 from past.builtins import basestring
 import inspect
 import re
-import logging
-import voorhees
 import connexion
+import voorhees
 from connexion import NoContent
 from .registry import registry
-
-logger = logging.getLogger(__name__)
-
-
-class NotFound(Exception):
-    pass
-
-
-class ClientError(Exception):
-    pass
+from .exceptions import NotFound, ClientError
 
 
 def endpoint_proxy(*args, **kwargs):

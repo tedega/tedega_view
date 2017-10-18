@@ -4,6 +4,10 @@ from .registry import (  # noqa
     config_service_endpoint,
     config_service_model
 )
+from .exceptions import (  # noqa
+    NotFound,
+    ClientError
+)
 from .service import start_service  # noqa
 
 __author__ = """Torsten Irländer"""
