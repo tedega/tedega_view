@@ -8,3 +8,7 @@ class NotFound(Exception):
 
 class ClientError(Exception):
     pass
+
+
+class AuthError(Exception):
+    pass

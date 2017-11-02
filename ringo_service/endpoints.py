@@ -7,7 +7,7 @@ import connexion
 import voorhees
 from connexion import NoContent
 from .registry import registry
-from .exceptions import NotFound, ClientError
+from .exceptions import NotFound, ClientError, AuthError
 
 
 def endpoint_proxy(*args, **kwargs):
@@ -48,6 +48,9 @@ def endpoint_proxy(*args, **kwargs):
     except NotFound:
         # Item could not befound. Return 404
         return NoContent, 404
+    except AuthError as e:
+        # User can not be authorized or authenticated.
+        return voorhees.to_json(e.message), 403
     except Exception:
         # General Error. Will result in a 500
         raise

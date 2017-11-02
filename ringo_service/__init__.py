@@ -6,12 +6,13 @@ from .registry import (
 )
 from .exceptions import (
     NotFound,
-    ClientError
+    ClientError,
+    AuthError
 )
 from .service import start_service
 
 __all__ = [config_service_endpoint, config_service_model,
-           NotFound, ClientError,
+           NotFound, ClientError, AuthError,
            start_service]
 
 __author__ = """Torsten Irländer"""
