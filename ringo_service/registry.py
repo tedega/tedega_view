@@ -26,18 +26,8 @@ def config_service_endpoint(path, method):
     return real_decorator
 
 
-def config_service_model():
-    def real_decorator(clazz):
-        def callback(scanner, name, ob):
-            scanner.registry.add_model(name, clazz)
-        venusian.attach(clazz, callback)
-        return clazz
-    return real_decorator
-
-
 class Registry(object):
     def __init__(self):
-        self.models = []
         self.endpoints = {}
 
     def add_endpoint(self, path, method, function):
@@ -47,9 +37,6 @@ class Registry(object):
 
     def get_endpoint(self, path, method):
         return self.endpoints.get("{}:{}".format(path, method))
-
-    def add_model(self, name, clazz):
-        self.models.append((name, clazz))
 
 
 registry = Registry()
