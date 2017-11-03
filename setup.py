@@ -14,6 +14,7 @@ requirements = [
     'connexion',
     'flask_cors',
     'voorhees',
+    'pytest-flask'
 ]
 
 test_requirements = [
