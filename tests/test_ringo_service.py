@@ -8,29 +8,18 @@ test_ringo_service
 Tests for `ringo_service` module.
 """
 
-import pytest
 
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
-
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument.
-    """
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
-
-
-def test_get_params_from_path():
-    from ringo_service.api import get_params_from_path
-    path = "/foo/{item_id}/bar/{baz}"
-    params = get_params_from_path(path)
-    assert len(params) == 2
-    assert params[0] == "item_id"
-    assert params[1] == "baz"
+def test_version(client):
+    from ringo_service import __version__
+    res = client.get('/test?action=foo')
+    assert res.status_code == 204
+    res = client.get('/test?action=version')
+    assert res.json == u'{"version": "%s"}' % __version__
+    res = client.get('/test?action=clienterror')
+    assert res.status_code == 400
+    res = client.get('/test?action=autherror')
+    assert res.status_code == 403
+    res = client.get('/test?action=notfound')
+    assert res.status_code == 404
+    res = client.get('/test?action=genericerror')
+    assert res.status_code == 500

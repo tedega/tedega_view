@@ -1,0 +1,15 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: minimal
+  description: Example of the bare minimum Swagger spec
+paths:
+  /test:
+    get:
+      parameters:
+        - name: action
+          in: query
+          type: string
+      responses:
+        "200":
+          description: Returns results of the test function depending on the action.
