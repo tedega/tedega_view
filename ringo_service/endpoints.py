@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from past.builtins import basestring
 import inspect
 import re
 import connexion
@@ -141,9 +140,7 @@ def _get_service_parameters(service, parameters):
     """
 
     def looks_like_json(value):
-        if (isinstance(value, basestring) and
-           (value.startswith("{") or
-           value.startswith("["))):
+        if (value.startswith("{") or value.startswith("[")):
             return True
         return False
 
@@ -155,8 +152,10 @@ def _get_service_parameters(service, parameters):
     # arguments matches on of the argumentsthe service wants.
     for param in parameters:
         value = parameters[param]
-        if looks_like_json(value):
-            value = voorhees.from_json(value)
+        if isinstance(value, bytes):
+            value = value.decode("utf-8")
+            if looks_like_json(value):
+                value = voorhees.from_json(value)
         if param in service_wants:
             service_send[param] = value
         elif isinstance(value, dict):
