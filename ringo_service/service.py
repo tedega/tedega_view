@@ -4,8 +4,8 @@ import venusian
 from flask_cors import CORS
 import connexion
 
-from registry import registry
-from endpoints import ServiceResolver
+from .registry import registry
+from .endpoints import ServiceResolver
 
 # Create a new logger for this service.
 logger = logging.getLogger(__name__)
