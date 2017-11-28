@@ -13,6 +13,7 @@ requirements = [
     'future',
     'connexion',
     'venusian',
+    'flask',
     'flask_cors',
     'voorhees',
     'pytest-flask'
