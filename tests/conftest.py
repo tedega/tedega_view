@@ -1,10 +1,10 @@
 import os
 import pytest
-import ringo_service
+import tedega_service
 
 
 @pytest.fixture
 def app():
     swagger_config = os.path.abspath(os.path.join(os.path.dirname(__file__), "swagger.yaml"))
-    app = ringo_service.service.create_service(swagger_config, ringo_service)
+    app = tedega_service.service.create_service(swagger_config, tedega_service)
     return app.app

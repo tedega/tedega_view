@@ -13,8 +13,8 @@ from .exceptions import NotFound, ClientError, AuthError
 
 @config_service_endpoint(path="/test", method="GET")
 def test(action):
-    from ringo_service import __version__
-    from ringo_service import ClientError, AuthError, NotFound
+    from tedega_service import __version__
+    from tedega_service import ClientError, AuthError, NotFound
     if action == "version":
         return {'version': __version__}
     if action == "clienterror":

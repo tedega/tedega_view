@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-test_ringo_service
+test_tedega_service
 ----------------------------------
 
-Tests for `ringo_service` module.
+Tests for `tedega_service` module.
 """
 
 
 def test_version(client):
-    from ringo_service import __version__
+    from tedega_service import __version__
     res = client.get('/test?action=foo')
     assert res.status_code == 204
     res = client.get('/test?action=version')

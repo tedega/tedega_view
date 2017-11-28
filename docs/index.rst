@@ -1,4 +1,4 @@
-Welcome to Ringo Service's documentation!
+Welcome to Tedega Service's documentation!
 ======================================
 
 Contents:

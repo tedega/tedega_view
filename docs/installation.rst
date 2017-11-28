@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install Ringo Service, run this command in your terminal:
+To install Tedega Service, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install ringo_service
+    $ pip install tedega_service
 
-This is the preferred method to install Ringo Service, as it will always install the most recent stable release. 
+This is the preferred method to install Tedega Service, as it will always install the most recent stable release. 
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,19 +26,19 @@ you through the process.
 From sources
 ------------
 
-The sources for Ringo Service can be downloaded from the `Github repo`_.
+The sources for Tedega Service can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/toirl/ringo_service
+    $ git clone git://github.com/toirl/tedega_service
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/toirl/ringo_service/tarball/master
+    $ curl  -OL https://github.com/toirl/tedega_service/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/toirl/ringo_service
-.. _tarball: https://github.com/toirl/ringo_service/tarball/master
+.. _Github repo: https://github.com/toirl/tedega_service
+.. _tarball: https://github.com/toirl/tedega_service/tarball/master

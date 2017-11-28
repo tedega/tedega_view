@@ -23,23 +23,23 @@ test_requirements = [
 ]
 
 setup(
-    name='ringo_service',
+    name='tedega_service',
     version='0.1.0',
-    description="Ringo service",
+    description="Tedega service",
     long_description=readme + '\n\n' + history,
     author="Torsten Irländer",
     author_email='torsten.irlaender@googlemail.com',
-    url='https://github.com/toirl/ringo_service',
+    url='https://github.com/toirl/tedega_service',
     packages=[
-        'ringo_service',
+        'tedega_service',
     ],
-    package_dir={'ringo_service':
-                 'ringo_service'},
+    package_dir={'tedega_service':
+                 'tedega_service'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='ringo_service',
+    keywords='tedega_service',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

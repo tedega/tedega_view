@@ -1,4 +1,4 @@
-* Ringo Service version:
+* Tedega Service version:
 * Python version:
 * Operating System:
 

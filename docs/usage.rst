@@ -5,34 +5,34 @@ Usage
 Configure a service endpoint
 ----------------------------
 
-.. autofunction:: ringo_service.api.config_service_endpoint
+.. autofunction:: tedega_service.api.config_service_endpoint
 
 
 Configure a service model
 -------------------------
 
-.. autofunction:: ringo_service.api.config_service_model
+.. autofunction:: tedega_service.api.config_service_model
 
 Start the service
 -----------------
 
-.. autofunction:: ringo_service.service.start_service
+.. autofunction:: tedega_service.service.start_service
 
 ==========================
 Predefined services (CRUD)
 ==========================
 
-.. autofunction:: ringo_service.api.search
-.. autofunction:: ringo_service.api.create
-.. autofunction:: ringo_service.api.read
-.. autofunction:: ringo_service.api.update
-.. autofunction:: ringo_service.api.delete
+.. autofunction:: tedega_service.api.search
+.. autofunction:: tedega_service.api.create
+.. autofunction:: tedega_service.api.read
+.. autofunction:: tedega_service.api.update
+.. autofunction:: tedega_service.api.delete
 
 
 .. Setup Domain model
 .. ------------------
 ..
-.. .. literalinclude:: ../ringo_service/model/example.py
+.. .. literalinclude:: ../tedega_service/model/example.py
 ..    :language: python
 ..    :emphasize-lines: 12,15-18
 ..    :linenos:
@@ -68,4 +68,4 @@ Predefined services (CRUD)
 ..
 ..     $ export SERVICE_MODE=Production
 ..     $ export SERVICE_CONFIG=myconfig.cfg
-..     $ python ringo_service/service.py
+..     $ python tedega_service/service.py

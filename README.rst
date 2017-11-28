@@ -1,33 +1,33 @@
 ===============================
-Ringo Service
+Tedega Service
 ===============================
 
 
-.. image:: https://img.shields.io/pypi/v/ringo_service.svg
-        :target: https://pypi.python.org/pypi/ringo_service
+.. image:: https://img.shields.io/pypi/v/tedega_service.svg
+        :target: https://pypi.python.org/pypi/tedega_service
 
-.. image:: https://img.shields.io/travis/toirl/ringo_service.svg
-        :target: https://travis-ci.org/toirl/ringo_service
+.. image:: https://img.shields.io/travis/toirl/tedega_service.svg
+        :target: https://travis-ci.org/toirl/tedega_service
 
-.. image:: https://readthedocs.org/projects/ringo-service/badge/?version=latest
-        :target: https://ringo-service.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/tedega-service/badge/?version=latest
+        :target: https://tedega-service.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/toirl/ringo_service/shield.svg
-     :target: https://pyup.io/repos/github/toirl/ringo_service/
+.. image:: https://pyup.io/repos/github/toirl/tedega_service/shield.svg
+     :target: https://pyup.io/repos/github/toirl/tedega_service/
      :alt: Updates
 
 
-Ringo service is a framework to build microservices. It can be used to make a
+Tedega service is a framework to build microservices. It can be used to make a
 specic domain model available through a REST API.
 
-Ringo service use `connexion <https://github.com/zalando/connexion>`_ to
+Tedega service use `connexion <https://github.com/zalando/connexion>`_ to
 generate the endpoints of the service based on a `swagger
 <https://swagger.io>`_ specification. The specification is partially
 dynamically generated based on the attributes of the domain model.
 
 * Free software: MIT license
-* Documentation: https://ringo-service.readthedocs.io.
+* Documentation: https://tedega-service.readthedocs.io.
 
 
 Features
