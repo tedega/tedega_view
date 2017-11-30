@@ -12,7 +12,7 @@ To install Tedega Service, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install tedega_service
+    $ pip install tedega_view
 
 This is the preferred method to install Tedega Service, as it will always install the most recent stable release. 
 
@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/toirl/tedega_service
+    $ git clone git://github.com/toirl/tedega_view
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/toirl/tedega_service/tarball/master
+    $ curl  -OL https://github.com/toirl/tedega_view/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/toirl/tedega_service
-.. _tarball: https://github.com/toirl/tedega_service/tarball/master
+.. _Github repo: https://github.com/toirl/tedega_view
+.. _tarball: https://github.com/toirl/tedega_view/tarball/master

@@ -5,34 +5,34 @@ Usage
 Configure a service endpoint
 ----------------------------
 
-.. autofunction:: tedega_service.api.config_service_endpoint
+.. autofunction:: tedega_view.api.config_service_endpoint
 
 
 Configure a service model
 -------------------------
 
-.. autofunction:: tedega_service.api.config_service_model
+.. autofunction:: tedega_view.api.config_service_model
 
 Start the service
 -----------------
 
-.. autofunction:: tedega_service.service.start_service
+.. autofunction:: tedega_view.service.start_service
 
 ==========================
 Predefined services (CRUD)
 ==========================
 
-.. autofunction:: tedega_service.api.search
-.. autofunction:: tedega_service.api.create
-.. autofunction:: tedega_service.api.read
-.. autofunction:: tedega_service.api.update
-.. autofunction:: tedega_service.api.delete
+.. autofunction:: tedega_view.api.search
+.. autofunction:: tedega_view.api.create
+.. autofunction:: tedega_view.api.read
+.. autofunction:: tedega_view.api.update
+.. autofunction:: tedega_view.api.delete
 
 
 .. Setup Domain model
 .. ------------------
 ..
-.. .. literalinclude:: ../tedega_service/model/example.py
+.. .. literalinclude:: ../tedega_view/model/example.py
 ..    :language: python
 ..    :emphasize-lines: 12,15-18
 ..    :linenos:
@@ -68,4 +68,4 @@ Predefined services (CRUD)
 ..
 ..     $ export SERVICE_MODE=Production
 ..     $ export SERVICE_CONFIG=myconfig.cfg
-..     $ python tedega_service/service.py
+..     $ python tedega_view/service.py

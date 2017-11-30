@@ -28,5 +28,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: toirl/tedega_service
+    repo: toirl/tedega_view
     condition: $TOXENV == py27

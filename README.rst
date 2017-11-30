@@ -3,18 +3,18 @@ Tedega Service
 ===============================
 
 
-.. image:: https://img.shields.io/pypi/v/tedega_service.svg
-        :target: https://pypi.python.org/pypi/tedega_service
+.. image:: https://img.shields.io/pypi/v/tedega_view.svg
+        :target: https://pypi.python.org/pypi/tedega_view
 
-.. image:: https://img.shields.io/travis/toirl/tedega_service.svg
-        :target: https://travis-ci.org/toirl/tedega_service
+.. image:: https://img.shields.io/travis/toirl/tedega_view.svg
+        :target: https://travis-ci.org/toirl/tedega_view
 
 .. image:: https://readthedocs.org/projects/tedega-service/badge/?version=latest
         :target: https://tedega-service.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/toirl/tedega_service/shield.svg
-     :target: https://pyup.io/repos/github/toirl/tedega_service/
+.. image:: https://pyup.io/repos/github/toirl/tedega_view/shield.svg
+     :target: https://pyup.io/repos/github/toirl/tedega_view/
      :alt: Updates
 
 

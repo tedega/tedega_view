@@ -85,17 +85,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/tedega_service.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/tedega_view.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/tedega_service.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/tedega_view.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/tedega_service"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/tedega_service"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/tedega_view"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/tedega_view"
 	@echo "# devhelp"
 
 epub:

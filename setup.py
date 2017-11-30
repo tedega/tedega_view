@@ -24,23 +24,23 @@ test_requirements = [
 ]
 
 setup(
-    name='tedega_service',
+    name='tedega_view',
     version='0.1.0',
     description="Tedega service",
     long_description=readme + '\n\n' + history,
     author="Torsten Irländer",
     author_email='torsten.irlaender@googlemail.com',
-    url='https://github.com/toirl/tedega_service',
+    url='https://github.com/toirl/tedega_view',
     packages=[
-        'tedega_service',
+        'tedega_view',
     ],
-    package_dir={'tedega_service':
-                 'tedega_service'},
+    package_dir={'tedega_view':
+                 'tedega_view'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='tedega_service',
+    keywords='tedega_view',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
