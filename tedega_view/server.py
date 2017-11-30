@@ -5,7 +5,7 @@ from flask_cors import CORS
 import connexion
 
 from .registry import registry
-from .endpoints import ViewResolver
+from .views import ViewResolver
 
 # Create a new logger for this service.
 logger = logging.getLogger(__name__)
