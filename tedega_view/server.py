@@ -11,7 +11,7 @@ from .endpoints import ServiceResolver
 logger = logging.getLogger(__name__)
 
 
-def create_service(swagger_config, modul):
+def create_server(swagger_config, modul):
     # Scan for service endpoints and models in the given modul and store
     # these in the registry.
     scanner = venusian.Scanner(registry=registry)
@@ -23,8 +23,8 @@ def create_service(swagger_config, modul):
     return connexion_app
 
 
-def start_service(swagger_config, modul, port=None, server=None):
-    connexion_app = create_service(swagger_config, modul)
+def start_server(swagger_config, modul, port=None, server=None):
+    connexion_app = create_server(swagger_config, modul)
     config = connexion_app.app.config
 
     # Setup Logging
