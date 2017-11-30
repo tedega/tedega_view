@@ -18,9 +18,9 @@ def test(action):
     if action == "version":
         return {'version': __version__}
     if action == "clienterror":
-        raise ClientError
+        raise ClientError("Test ClientError")
     if action == "autherror":
-        raise AuthError
+        raise AuthError("Test AuthError")
     if action == "notfound":
         raise NotFound
     if action == "genericerror":
