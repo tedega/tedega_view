@@ -7,11 +7,11 @@ import voorhees
 from connexion import NoContent
 from connexion.resolver import Resolver
 
-from .registry import registry, config_service_endpoint
+from .registry import registry, config_view_endpoint
 from .exceptions import NotFound, ClientError, AuthError
 
 
-@config_service_endpoint(path="/test", method="GET", auth=None)
+@config_view_endpoint(path="/test", method="GET", auth=None)
 def test(action):
     from tedega_view import __version__
     from tedega_view import ClientError, AuthError, NotFound

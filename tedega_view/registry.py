@@ -18,7 +18,7 @@ class ServiceConfig(object):
         return "{}:{}".format(self.path, self.method)
 
 
-def config_service_endpoint(path, method, auth):
+def config_view_endpoint(path, method, auth):
     def real_decorator(function):
         def callback(scanner, name, ob):
             scanner.registry.add_endpoint(path, method, auth, function)

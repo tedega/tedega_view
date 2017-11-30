@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .registry import (
-    config_service_endpoint
+    config_view_endpoint
 )
 from .exceptions import (
     NotFound,
@@ -10,7 +10,7 @@ from .exceptions import (
 )
 from .service import start_service
 
-__all__ = [config_service_endpoint,
+__all__ = [config_view_endpoint,
            NotFound, ClientError, AuthError,
            start_service]
 
