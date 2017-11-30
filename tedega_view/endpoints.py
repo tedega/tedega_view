@@ -29,7 +29,7 @@ def test(action):
         return None
 
 
-class ServiceResolver(Resolver):
+class ViewResolver(Resolver):
     """Specific Resolver to map a request to a service endpoint. Usually
     the default resolver of connexion will take the operationID of the
     swagger config to determine the correct endpoint. But in
@@ -37,7 +37,7 @@ class ServiceResolver(Resolver):
     will act like a proxy."""
 
     def __init__(self):
-        self.function_resolver = lambda x: endpoint_proxy
+        self.function_resolver = lambda x: proxy
 
     def resolve_function_from_operation_id(self, operation_id):
         """
@@ -46,7 +46,7 @@ class ServiceResolver(Resolver):
         """
         return self.function_resolver(operation_id)
 
-        # Because we currently always return the endpoint_proxy the
+        # Because we currently always return the proxy the
         # import can not fail. For this reason I commented out this code
         # but leave it here in case I probably want to enhance the
         # functionallity of the resolver.
@@ -93,7 +93,7 @@ def authorize(checker):
         raise AuthError("Authorization failed for unknown reason")
 
 
-def endpoint_proxy(*args, **kwargs):
+def proxy(*args, **kwargs):
     """Proxy for all configured service endpoints.
 
     The method will forward the request to the configured service in the
@@ -120,7 +120,7 @@ def endpoint_proxy(*args, **kwargs):
 
         # Build params for the service
         service = endpoint.function
-        params = _get_service_parameters(service, kwargs)
+        params = _get_endpoint_parameter(service, kwargs)
 
         # Call the service TODO: Do we need to handle more return codes
         # like 201? What is a good way to distiguish between 200 and 201
@@ -174,17 +174,17 @@ def _get_request_jwt():
     return None
 
 
-def _get_service_parameters(service, parameters):
-    """Will return parameters suitable to call the given service.
+def _get_endpoint_parameter(endpoint, parameters):
+    """Will return parameters suitable to call the given endpoint.
 
     Example::
 
         {'values': '{"password": "Password", "id": 1, "name": "User1"}'}
 
-    :service: Service callable.
+    :endpoint: Endpoint callable.
     :parameters: Dictionary with function arguments preparsed as defined
                  by the swagger config.
-    :returns: Dictionary of service parameters.
+    :returns: Dictionary of endpoint parameters.
     """
 
     def looks_like_json(value):
@@ -192,22 +192,22 @@ def _get_service_parameters(service, parameters):
             return True
         return False
 
-    # First check which parameters are wanted by the given service.
-    service_wants = inspect.getargspec(service)[0]
-    service_send = {}
+    # First check which parameters are wanted by the given endpoint.
+    endpoint_wants = inspect.getargspec(endpoint)[0]
+    endpoint_send = {}
 
     # Iterate over all function arguments and check if any of those
-    # arguments matches on of the argumentsthe service wants.
+    # arguments matches on of the argumentsthe endpoint wants.
     for param in parameters:
         value = parameters[param]
         if isinstance(value, bytes):
             value = value.decode("utf-8")
             if looks_like_json(value):
                 value = voorhees.from_json(value)
-        if param in service_wants:
-            service_send[param] = value
+        if param in endpoint_wants:
+            endpoint_send[param] = value
         elif isinstance(value, dict):
             for subparam in value:
-                if subparam in service_wants:
-                    service_send[subparam] = value[subparam]
-    return service_send
+                if subparam in endpoint_wants:
+                    endpoint_send[subparam] = value[subparam]
+    return endpoint_send

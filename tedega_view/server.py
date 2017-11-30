@@ -5,7 +5,7 @@ from flask_cors import CORS
 import connexion
 
 from .registry import registry
-from .endpoints import ServiceResolver
+from .endpoints import ViewResolver
 
 # Create a new logger for this service.
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ def create_server(swagger_config, modul):
     scanner.scan(modul)
 
     connexion_app = connexion.App(__name__)
-    connexion_app.add_api(swagger_config, resolver=ServiceResolver())
+    connexion_app.add_api(swagger_config, resolver=ViewResolver())
     CORS(connexion_app.app)
     return connexion_app
 
