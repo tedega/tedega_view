@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 import os
 import importlib
-import logging
 import venusian
 from flask_cors import CORS
 import connexion
+from tedega_share import monitor_system
 
 from .registry import registry
 from .views import ViewResolver
-
-# Create a new logger for this service.
-logger = logging.getLogger(__name__)
 
 
 def register_endpoints(modul):
@@ -35,15 +32,10 @@ def start_server(modulname, swagger_file="swagger.yaml", port=None, server=None)
     connexion_app = create_server(modul, swagger_file)
     config = connexion_app.app.config
 
-    # Setup Logging
-    if config.get("DEBUG"):
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
     # Start the service
     if port is None:
         port = config.get('SERVER_PORT')
     if server is None:
         server = config.get('SERVER')
+    monitor_system(10)
     connexion_app.run(port=port, server=server)

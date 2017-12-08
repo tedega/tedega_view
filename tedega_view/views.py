@@ -7,8 +7,46 @@ import voorhees
 from connexion import NoContent
 from connexion.resolver import Resolver
 
+from tedega_share import get_logger, log_proctime
+
 from .registry import registry, config_view_endpoint
 from .exceptions import NotFound, ClientError, AuthError
+
+
+def log_returncode(func):
+
+    def wrap(*args, **kwargs):
+        log = get_logger()
+        result, code = func(*args, **kwargs)
+        if code > 299:
+            log.error({"code": code}, "RETURNCODE")
+        else:
+            log.info({"code": code}, "RETURNCODE")
+        return result, code
+    return wrap
+
+
+def log_request(func):
+
+    def wrap(*args, **kwargs):
+        request = connexion.request
+        path = _get_request_path()
+        method = _get_request_method()
+        log = get_logger()
+        log.info({"path": path, "method": method, "form": request.form, "args": request.args}, "REQUEST")
+        result, code = func(*args, **kwargs)
+        return result, code
+    return wrap
+
+
+def log_auth(func):
+
+    def wrap(*args, **kwargs):
+        log = get_logger()
+        log.info("Test", "AUTH")
+        result, code = func(*args, **kwargs)
+        return result, code
+    return wrap
 
 
 @config_view_endpoint(path="/test", method="GET", auth=None)
@@ -93,6 +131,9 @@ def authorize(checker):
         raise AuthError("Authorization failed for unknown reason")
 
 
+@log_request
+@log_returncode
+@log_proctime
 def proxy(*args, **kwargs):
     """Proxy for all configured service endpoints.
 
@@ -104,6 +145,7 @@ def proxy(*args, **kwargs):
     the swagger config.
     :returns: Response sent to the client.
     """
+    log = get_logger()
     try:
         # Get the configured service from the registry.
         path = _get_request_path()
@@ -135,14 +177,16 @@ def proxy(*args, **kwargs):
             return NoContent, 204
     except ClientError as e:
         # Client request was wrong.
+        log.error(e.message)
         return e.message, 400
     except NotFound:
         # Item could not befound. Return 404
         return NoContent, 404
     except AuthError as e:
         # User can not be authorized or authenticated.
+        log.error(e.message)
         return voorhees.to_json(e.message), 403
-    except Exception:
+    except Exception as e:
         # General Error. Will result in a 500
         raise
 
