@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import os
+import re
 import importlib
 import venusian
 from flask_cors import CORS
 import connexion
-from tedega_share import monitor_system
 
 from .registry import registry
 from .views import ViewResolver
@@ -14,28 +14,40 @@ def register_endpoints(modul):
     # Scan for service endpoints and models in the given modul and store
     # these in the registry.
     scanner = venusian.Scanner(registry=registry)
-    scanner.scan(modul)
+    scanner.scan(modul, ignore=[re.compile('wsgi$').search])
 
 
-def create_server(modul, swagger_file):
+def create_application(modulname, swagger_file="swagger.yaml", run_on_init=None):
+    """Will create a connexion application for the given domain modul in
+    `modulname`. The method will register all endpoints of the modul and
+    make them available with the definden REST-API given in the
+    `swagger_file`.
+
+    The funtion can optionally run a list of functions when the
+    application is created. This can be used to start background
+    processes like monitoring. The callable are give as a list of
+    tuples. The first element in the tuple is the callable and the
+    second element are the arguments used to call the callable.
+
+    :modulname: String of the name of the domain modul/package.
+    :swagger_file: Name of the Swagger config relativ to the given modul/package.
+    :run_on_init: List of callable which are called after the application has been created.
+    :returns: Connexion application.
+
+    """
+    modul = importlib.import_module(modulname)
+    register_endpoints(modul)
     package_directory = os.path.dirname(os.path.abspath(modul.__file__))
     swagger = os.path.abspath(os.path.join(package_directory, swagger_file))
     connexion_app = connexion.App(__name__)
     connexion_app.add_api(swagger, resolver=ViewResolver())
     CORS(connexion_app.app)
+
+    if isinstance(run_on_init, list):
+        for func, func_args in run_on_init:
+            if func_args:
+                func(func_args)
+            else:
+                func()
+
     return connexion_app
-
-
-def start_server(modulname, swagger_file="swagger.yaml", port=None, server=None):
-    modul = importlib.import_module(modulname)
-    register_endpoints(modul)
-    connexion_app = create_server(modul, swagger_file)
-    config = connexion_app.app.config
-
-    # Start the service
-    if port is None:
-        port = config.get('SERVER_PORT')
-    if server is None:
-        server = config.get('SERVER')
-    monitor_system(10)
-    connexion_app.run(port=port, server=server)

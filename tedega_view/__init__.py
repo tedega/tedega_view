@@ -8,11 +8,11 @@ from .exceptions import (
     ClientError,
     AuthError
 )
-from .server import start_server
+from .server import create_application
 
 __all__ = [config_view_endpoint,
            NotFound, ClientError, AuthError,
-           start_server]
+           create_application]
 
 __author__ = """Torsten Irländer"""
 __email__ = 'torsten.irlaender@googlemail.com'
