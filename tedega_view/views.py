@@ -236,6 +236,9 @@ def _get_endpoint_parameter(endpoint, parameters):
             return True
         return False
 
+    if not isinstance(parameters, dict):
+        raise ValueError("Parameters must be a dictionary.")
+
     # First check which parameters are wanted by the given endpoint.
     endpoint_wants = inspect.getargspec(endpoint)[0]
     endpoint_send = {}
