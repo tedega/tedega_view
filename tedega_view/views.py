@@ -39,17 +39,11 @@ def log_request(func):
     return wrap
 
 
-def log_auth(func):
-
-    def wrap(*args, **kwargs):
-        log = get_logger()
-        log.info("Test", "AUTH")
-        result, code = func(*args, **kwargs)
-        return result, code
-    return wrap
+def nullchecker(jwt):
+    return True
 
 
-@config_view_endpoint(path="/test", method="GET", auth=None)
+@config_view_endpoint(path="/test", method="GET", auth=nullchecker)
 def test(action):
     from tedega_view import __version__
     from tedega_view import ClientError, AuthError, NotFound
@@ -215,7 +209,7 @@ def _get_request_jwt():
     """Will return the encoded JWT Token from the header if available.
     Else None"""
     # request = connexion.request
-    return None
+    return object
 
 
 def _get_endpoint_parameter(endpoint, parameters):
