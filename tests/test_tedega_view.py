@@ -15,7 +15,8 @@ def test_version(client):
     res = client.get('/test?action=foo')
     assert res.status_code == 204
     res = client.get('/test?action=version')
-    assert res.json == u'{"version": "%s"}' % __version__
+    expect = bytes('{\n  "version": "%s"\n}\n' % __version__, "utf8")
+    assert res.data == expect
     res = client.get('/test?action=clienterror')
     assert res.status_code == 400
     res = client.get('/test?action=autherror')
