@@ -4,6 +4,7 @@ import inspect
 import re
 import connexion
 import voorhees
+from flask import jsonify
 from connexion import NoContent
 from connexion.resolver import Resolver
 
@@ -165,7 +166,9 @@ def proxy(*args, **kwargs):
 
         # Result. Return it with status code 200
         if result:
-            return voorhees.to_json(result), 200
+            # Get a dictionary with serialized values.
+            result = voorhees.serialize(result)
+            return result, 200
         # No Result. Return it with status code 204
         else:
             return NoContent, 204
