@@ -11,7 +11,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'future',
-    'connexion',
+    'connexion[swagger-ui]==2.6.0',
     'venusian',
     'flask',
     'flask_cors',
