@@ -46,7 +46,13 @@ def create_application(modulname, swagger_file="swagger.yaml", run_on_init=None)
     if isinstance(run_on_init, list):
         for func, func_args in run_on_init:
             if func_args:
-                func(func_args)
+                if len(func_args) == 2:
+                    if func_args[0]:
+                        func(func_args[0], **func_args[1])
+                    else:
+                        func(**func_args[1])
+                else:
+                    func(func_args)
             else:
                 func()
 
